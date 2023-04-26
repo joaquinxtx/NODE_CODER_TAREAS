@@ -1,40 +1,22 @@
-const fs = require ('fs')
-// const viewList = (array) => {
-//   if (Array.isArray(array)) {
-//     if (array.length === 0) {
-//       return "Empty List";
-//     } else {
-//       return array.map((x) => x);
-//     }
-//   } else {
-//     return "is not array";
-//   }
-// };
-
-// const array1 = [1, 2, 3, 4, 5];
-// const array2 = [];
-// const number = 2;
-
-// console.log(viewList(array1));
-// console.log(viewList(array2));
-// console.log(viewList(number));
-
+const fs = require ('fs');
+const { title } = require('process');
 //           ACTIVIDAD n`1
 
-const path = "./ususarios.json"
+
 class ProductManager {
-  constructor() {
+  constructor(path ) {
     this.products = path;
   }
-  async addProduct  (title, description, price, thumbnail,  stock) {
+  async addProduct  (title, description, price, thumbnail,  stock,code) {
     const product = {
       
+      id: await this.#newId()+1,
       title,
       description,
       price,
       thumbnail,
-      id:this.#newId()+1,
       stock,
+      code
     };
     try {
       const productFile = await this.getProduct();
@@ -58,10 +40,8 @@ class ProductManager {
          productsJS.map((product) => {
           if (product.id > maxId) maxId = product.id;
         });
-        return maxId
-      } else {
-        return [];
-      }
+      } 
+      return maxId
     } catch (error) {
       console.log(error);
     }
@@ -82,22 +62,71 @@ class ProductManager {
     
   };
 
-  getProductById = (id) => {
-  return this.products.find((product)=> product.id === id)
+  getProductById = async(id) => {
+    try {
+      if (fs.existsSync(this.products)) {
+        const products = await fs.promises.readFile(this.products, "utf8");
+        const productsJS = JSON.parse(products);
+        const productId =productsJS.find((product)=> product.id === id)
+        return productId;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  
+  };
+  deleteProductById = async(id) => {
+    try {
+      if (fs.existsSync(this.products)) {
+        const products = await fs.promises.readFile(this.products, "utf8");
+        const productsJS = JSON.parse(products);
+        const newProducts = productsJS.filter((product) => product.id !== id);
+        await fs.promises.writeFile(this.products, JSON.stringify(newProducts));
+        return newProducts;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  
+  };
+
+  updateProductById = async (id, newData) => {
+    try {
+      if (fs.existsSync(this.products)) {
+        const products = await fs.promises.readFile(this.products, "utf8");
+        const productsJS = JSON.parse(products);
+        const updatedProducts = productsJS.map((product) => {
+          if (product.id === id) {
+            const { title, description, price, thumbnail, id, stock } = { ...product, ...newData };
+            return { title, description, price, thumbnail, id, stock }
+          }
+          return product;
+        });
+        await fs.promises.writeFile(this.products, JSON.stringify(updatedProducts));
+        return updatedProducts;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 }
 
-const producManager = new ProductManager();
-// producManager.addProduct("manzana", "manzana roja", 185 , "sin imagen" , 123 , 3)
-// producManager.addProduct("manzana", "manzana roja", 185 , "sin imagen" , 123 , 3)
+const producManager = new ProductManager("./productos.json");
 
-// console.log("Vista de productos",producManager.getProduct());
-// console.log("viendo productos por id",producManager.getProductById(2));
 
 const test = async()=>{
   const get = await producManager.getProduct()
   console.log('Primera consulta', get);
-  await producManager.addProduct("manzana", "manzana roja", 185, "sin imagen", 123, 3)
+   await producManager.addProduct("manzana", "manzana roja", 185, "sin imagen", 123, 3,"manzana1")
+ console.log("ID",await producManager.getProductById(5)) 
+ console.log("DELETE",await producManager.deleteProductById(3)) 
+ console.log("ACTULIZADAS",await producManager.updateProductById(1,{title:"Nueva mandarina"})) 
 }
 
 test()
