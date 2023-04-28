@@ -1,0 +1,26 @@
+{
+  "name": "01-pricipiosjavascript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node .",
+    "start:http": "nodemon server-http.js",
+    "start:express": "nodemon server-express.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joaquinxtx/NODE_CODER_TAREAS.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/joaquinxtx/NODE_CODER_TAREAS/issues"
+  },
+  "homepage": "https://github.com/joaquinxtx/NODE_CODER_TAREAS#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
