@@ -4,7 +4,7 @@ export default class ProductManager {
     constructor(path ) {
       this.products = path;
     }
-    async addProduct  (title, description, price, thumbnail,  stock,code) {
+    async addProduct  (title, description, price, thumbnail,  stock,code,status ,category) {
       const product = {
         
         id: await this.#newId()+1,
@@ -13,7 +13,9 @@ export default class ProductManager {
         price,
         thumbnail,
         stock,
-        code
+        code,
+        status,
+        category
       };
       try {
         const productFile = await this.getProduct();
@@ -98,8 +100,8 @@ export default class ProductManager {
           const productsJS = JSON.parse(products);
           const updatedProducts = productsJS.map((product) => {
             if (product.id === id) {
-              const { title, description, price, thumbnail, id, stock } = { ...product, ...newData };
-              return { title, description, price, thumbnail, id, stock }
+              const { title, description, price, thumbnail, stock  ,code,status,category } = { ...product, ...newData };
+              return { title, description, price, thumbnail,stock,code,status,category }
             }
             return product;
           });
