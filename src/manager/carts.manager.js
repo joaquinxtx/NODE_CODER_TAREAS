@@ -7,7 +7,13 @@ export default class CartManager {
   async createCart() {
     const cart = {
       id: (await this.#newId()) + 1,
-      products: [],
+      products: [
+        {
+          id: (await this.#newIdProduct()) + 1,
+          quantity:1
+       
+        }
+      ],
     };
     try {
       const cartsFile = await this.getAllCarts();
@@ -18,7 +24,7 @@ export default class CartManager {
     }
   }
 
-  async #newId() {
+   async #newId() {
     let maxId = 0;
 
     try {
@@ -34,6 +40,24 @@ export default class CartManager {
       console.log(error);
     }
   }
+   async #newIdProduct() {
+    let maxId = 0;
+
+    try {
+      if (fs.existsSync(this.carts.products)) {
+        const carts = await fs.promises.readFile(this.carts.products, "utf8");
+        const cartsJS = JSON.parse(carts);
+        cartsJS.map((cart) => {
+          if (cart.id.products.id > maxId) maxId = cart.id.products.id;
+        });
+      }
+      return maxId;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  
 
   async getAllCarts() {
     try {
@@ -64,7 +88,7 @@ export default class CartManager {
     }
   };
 
-  saveProductToCart = async (cart, productId, quantity) => {
+  saveProductToCart = async (cart,  productId) => {
     try {
       if (!cart) {
         throw new Error('Cart is undefined');
@@ -72,11 +96,11 @@ export default class CartManager {
       if (!cart.products) {
         cart.products = [];
       }
-      const existingProduct = cart.products.find((p) => p.id === productId);
-      if (existingProduct) {
-        existingProduct.quantity += quantity;
+      const existingProduct = cart.products.find((p) => p.id === parseInt(productId));
+      if (existingProduct) {  
+         existingProduct.quantity += 1         
       } else {
-        cart.products.push({ id: productId, quantity });
+        cart.products.push({ id: parseInt(productId) });
       }
       await fs.promises.writeFile(
         this.carts,

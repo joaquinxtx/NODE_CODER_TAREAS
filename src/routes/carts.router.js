@@ -25,15 +25,15 @@ router.post('/:idCart/product/:idProd', async(req,res)=>{
     try {
         const cartId = req.params.idCart;
         const productId = req.params.idProd;
-        const quantity = req.body.quantity;
+        
     
         // Obtener el carrito correspondiente utilizando el ID del carrito
-        const cart = await cartManager.getCartById(cartId);
+        const cart = await cartManager.getCartById(Number(cartId));
 
-        const product = await productManager.getProductById(Number(productId));
+        
     
         // Agregar el producto al carrito
-        const updatedCart = await cartManager.saveProductToCart(cart, product, quantity);
+        const updatedCart = await cartManager.saveProductToCart(cart,  productId);
     
         res.json(updatedCart);
       } catch (error) {
