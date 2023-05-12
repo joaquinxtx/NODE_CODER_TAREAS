@@ -1,5 +1,6 @@
 import { Router } from "express";
 import ProductManager from "../manager/productsmanager.js";
+import { productValidator } from "../middleware/productsValidator.js";
 
 
 const productManager = new ProductManager('./products.json')
@@ -11,6 +12,7 @@ const productManager = new ProductManager('./products.json')
 router.get('/',async(req,res)=>{
     try {
         const products = await productManager.getProduct()
+        res.status(200).json(products)
         res.status(200).json(products)
     } catch (error) {
         res.status(404).json({message: error.message})
@@ -34,7 +36,7 @@ router.get('/:id',async(req,res)=>{
     }
 })
 //POST
-router.post('/',async(req,res)=>{
+router.post('/',productValidator, async(req,res)=>{
     try {
         const product= req.body
         const newProduct= await productManager.addProduct(product)
