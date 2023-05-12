@@ -13,6 +13,7 @@ router.get('/',async(req,res)=>{
     try {
         const products = await productManager.getProduct()
         res.status(200).json(products)
+        res.status(200).json(products)
     } catch (error) {
         res.status(404).json({message: error.message})
         console.log(error);

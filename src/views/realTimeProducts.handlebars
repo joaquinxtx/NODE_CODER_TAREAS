@@ -1,0 +1,33 @@
+<div>
+<form action="/" method="post">
+{{!-- input:text --}}
+<h2>Insert your data</h2>
+    <label for="title">TitleProduct</label>
+        <input type="text" name="title" id="title"><br>
+    <label>price</label>
+        <input type="price" name="price" id="price"><br>
+    <label>stock</label>
+        <input type="stock" name="stock" id="stock"><br>
+    <label>status</label>
+        <input type="status" name="status" id="status"><br>
+    <label>category</label>
+        <input type="category" name="category" id="category"><br>
+    <input type="submit" value="SAVE">
+</form>
+    
+</div>
+<h1>PRODUCTOS CON SOCKET.IO</h1>
+{{#if products.length}}
+    {{#each products}}
+    <ul>
+        <li>{{this.title.title}}</li>
+        <li>{{this.title.description}}</li>
+        <li>{{this.title.price}}</li>
+        <li>{{this.title.stock}}</li>
+        <li>{{this.title.price}}</li>
+        
+    </ul>
+    {{/each}}
+{{else}}
+    <p>No tenemos usuarios</p>
+{{/if}}
